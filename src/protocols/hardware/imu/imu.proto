@@ -18,21 +18,11 @@ message Quaternion {
 }
 
 message SingleImuData {
-  aimrt.protocols.common.Header header = 1;
-
-  // Orientation data from framequat (quaternion)
+  string name = 1;
   Quaternion orientation = 2;
-
-  // Angular velocity data from gyro
   Vector3 angular_velocity = 3;
-
-  // Position data from framepos
-  Vector3 position = 4;
-
-  // Linear velocity data from velocimeter
+  Vector3 linear_position = 4;
   Vector3 linear_velocity = 5;
-
-  // Linear acceleration data from accelerometer
   Vector3 linear_acceleration = 6;
 }
 

@@ -69,7 +69,7 @@ void JointSensorPublisher::Shutdown() {
 void JointSensorPublisher::PublishSensorData() {
   static constexpr uint32_t ONE_MB = 1024 * 1024;
 
-  if (conter_++ < avg_interval_) return;
+  if (counter_++ < avg_interval_) return;
 
   std::unique_ptr<SensorStateGroup[]> state_array(new SensorStateGroup[joint_num_]);
 
@@ -93,9 +93,9 @@ void JointSensorPublisher::PublishSensorData() {
 
   avg_interval_ += avg_interval_base_;
 
-  if (conter_ > ONE_MB) {
+  if (counter_ > ONE_MB) {
     avg_interval_ -= ONE_MB;
-    conter_ -= ONE_MB;
+    counter_ -= ONE_MB;
   }
 }
 

@@ -36,6 +36,7 @@ target_link_libraries(
   PRIVATE yaml-cpp::yaml-cpp
   PUBLIC aimrt::interface::aimrt_module_cpp_interface
          aimrt_mujoco_sim::protocols::joint_pb_gencode
+         aimrt_mujoco_sim::protocols::imu_pb_gencode
          mujoco::libsimulate
          mujoco::mujoco
          glfw)
