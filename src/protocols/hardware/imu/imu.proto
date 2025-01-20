@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+import "header.proto";
+
+package aimrt.protocols.sensor;
+
+message Vector3 {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+}
+
+message Quaternion {
+  double w = 1;
+  double x = 2;
+  double y = 3;
+  double z = 4;
+}
+
+message SingleImuData {
+  aimrt.protocols.common.Header header = 1;
+
+  // Orientation data from framequat (quaternion)
+  Quaternion orientation = 2;
+
+  // Angular velocity data from gyro
+  Vector3 angular_velocity = 3;
+
+  // Position data from framepos
+  Vector3 position = 4;
+
+  // Linear velocity data from velocimeter
+  Vector3 linear_velocity = 5;
+
+  // Linear acceleration data from accelerometer
+  Vector3 linear_acceleration = 6;
+}
+
+message ImuState {
+  aimrt.protocols.common.Header header = 1;
+  repeated SingleImuData data = 2;
+}
