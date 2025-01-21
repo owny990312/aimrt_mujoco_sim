@@ -9,7 +9,7 @@
 #include "mujoco_sim_module/global.h"
 #include "mujoco_sim_module/publisher/publisher_base.h"
 
-namespace aimrt_mujoco_sim::mujoco_sim_module {
+namespace aimrt_mujoco_sim::mujoco_sim_module::publisher {
 
 class JointSensorPublisher : public PublisherBase {
  public:
@@ -54,12 +54,11 @@ class JointSensorPublisher : public PublisherBase {
 
  private:
   void RegisterSensorAddr();
-  void CheckFrequency();
 
  private:
   struct SensorAddrGroup {
-    uint32_t jointpos_addr;
-    uint32_t jointvel_addr;
+    int32_t jointpos_addr;
+    int32_t jointvel_addr;
   };
 
   struct SensorStateGroup {
@@ -86,4 +85,4 @@ class JointSensorPublisher : public PublisherBase {
   uint32_t counter_ = 0;
 };
 
-}  // namespace aimrt_mujoco_sim::mujoco_sim_module
+}  // namespace aimrt_mujoco_sim::mujoco_sim_module::publisher

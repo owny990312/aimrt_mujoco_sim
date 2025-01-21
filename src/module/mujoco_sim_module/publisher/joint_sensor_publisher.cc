@@ -5,11 +5,12 @@
 #include "aimrt_module_protobuf_interface/channel/protobuf_channel.h"
 #include "aimrt_module_protobuf_interface/util/protobuf_tools.h"
 #include "mujoco_sim_module/global.h"
+#include "mujoco_sim_module/publisher/utils.h"
 
 namespace YAML {
 template <>
-struct convert<aimrt_mujoco_sim::mujoco_sim_module::JointSensorPublisher::Options> {
-  using Options = aimrt_mujoco_sim::mujoco_sim_module::JointSensorPublisher::Options;
+struct convert<aimrt_mujoco_sim::mujoco_sim_module::publisher::JointSensorPublisher::Options> {
+  using Options = aimrt_mujoco_sim::mujoco_sim_module::publisher::JointSensorPublisher::Options;
 
   static Node encode(const Options& rhs) {
     Node node;
@@ -44,13 +45,13 @@ struct convert<aimrt_mujoco_sim::mujoco_sim_module::JointSensorPublisher::Option
 };
 }  // namespace YAML
 
-namespace aimrt_mujoco_sim::mujoco_sim_module {
+namespace aimrt_mujoco_sim::mujoco_sim_module::publisher {
 
 void JointSensorPublisher::Initialize(YAML::Node options_node) {
   if (options_node && !options_node.IsNull())
     options_ = options_node.as<Options>();
 
-  CheckFrequency();
+  AIMRT_CHECK_ERROR_THROW(CheckFrequency(channel_frq_, avg_interval_base_), "Invalid frequency.");
   RegisterSensorAddr();
 
   options_node = options_;
@@ -101,53 +102,13 @@ void JointSensorPublisher::PublishSensorData() {
 
 void JointSensorPublisher::RegisterSensorAddr() {
   for (const auto& joint : options_.joints) {
-    const uint32_t pos_idx = !joint.bind_jointpos_sensor.empty()
-                                 ? mj_name2id(m_, mjOBJ_SENSOR, joint.bind_jointpos_sensor.c_str())
-                                 : -1;
-
-    const uint32_t vel_idx = !joint.bind_jointvel_sensor.empty()
-                                 ? mj_name2id(m_, mjOBJ_SENSOR, joint.bind_jointvel_sensor.c_str())
-                                 : -1;
-
-    if (!joint.bind_jointpos_sensor.empty() && pos_idx < 0) {
-      AIMRT_CHECK_ERROR_THROW(false, "Invalid position sensor name '{}'.",
-                              joint.bind_jointpos_sensor);
-    }
-    if (!joint.bind_jointvel_sensor.empty() && vel_idx < 0) {
-      AIMRT_CHECK_ERROR_THROW(false, "Invalid velocity sensor name '{}'.",
-                              joint.bind_jointvel_sensor);
-    }
-
     sensor_addr_vec_.emplace_back(SensorAddrGroup{
-        .jointpos_addr = pos_idx,
-        .jointvel_addr = vel_idx});
+        .jointpos_addr = GetValidatedSensorId(m_, joint.bind_jointpos_sensor),
+        .jointvel_addr = GetValidatedSensorId(m_, joint.bind_jointvel_sensor)});
 
     name_vec_.emplace_back(joint.name);
   }
-
   joint_num_ = sensor_addr_vec_.size();
 }
 
-void JointSensorPublisher::CheckFrequency() {
-  constexpr static uint32_t MAX_SIM_FRQ = 1000;
-  constexpr static double kError = 0.05;
-
-  AIMRT_CHECK_ERROR_THROW(channel_frq_ <= MAX_SIM_FRQ,
-                          "Invalid channel frequency {}, exceeds maximum frequency (1000 Hz)",
-                          channel_frq_);
-  avg_interval_base_ = static_cast<double>(MAX_SIM_FRQ) / static_cast<double>(channel_frq_);
-
-  if (MAX_SIM_FRQ % channel_frq_ == 0) return;
-
-  const uint32_t lower_interval = MAX_SIM_FRQ / channel_frq_;
-  const uint32_t upper_interval = lower_interval + 1;
-
-  const double lower_error = std::abs(lower_interval - avg_interval_base_) / avg_interval_base_;
-  const double upper_error = std::abs(upper_interval - avg_interval_base_) / avg_interval_base_;
-
-  AIMRT_CHECK_ERROR_THROW((lower_error <= kError && upper_error <= kError),
-                          "Invalid channel frequency {}, which cauess the frequency error is more than {} ",
-                          channel_frq_, kError);
-}
-
-}  // namespace aimrt_mujoco_sim::mujoco_sim_module
+}  // namespace aimrt_mujoco_sim::mujoco_sim_module::publisher

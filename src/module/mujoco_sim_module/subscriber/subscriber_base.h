@@ -9,7 +9,7 @@
 
 #include "mujoco/mujoco.h"
 
-namespace aimrt_mujoco_sim::mujoco_sim_module {
+namespace aimrt_mujoco_sim::mujoco_sim_module::subscriber {
 
 class SubscriberBase {
  public:
@@ -31,4 +31,4 @@ class SubscriberBase {
   virtual void ApplyCtrlData() = 0;
 };
 
-}  // namespace aimrt_mujoco_sim::mujoco_sim_module
+}  // namespace aimrt_mujoco_sim::mujoco_sim_module::subscriber

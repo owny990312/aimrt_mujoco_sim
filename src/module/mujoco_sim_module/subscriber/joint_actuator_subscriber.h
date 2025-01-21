@@ -9,7 +9,7 @@
 #include "mujoco_sim_module/global.h"
 #include "mujoco_sim_module/subscriber/subscriber_base.h"
 
-namespace aimrt_mujoco_sim::mujoco_sim_module {
+namespace aimrt_mujoco_sim::mujoco_sim_module::subscriber {
 
 class JointActuatorSubscriber : public SubscriberBase {
  public:
@@ -61,4 +61,4 @@ class JointActuatorSubscriber : public SubscriberBase {
   std::atomic<double*> command_array_{nullptr};
 };
 
-}  // namespace aimrt_mujoco_sim::mujoco_sim_module
+}  // namespace aimrt_mujoco_sim::mujoco_sim_module::subscriber

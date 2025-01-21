@@ -57,6 +57,11 @@ include(NamespaceTool)
 include(GetAimRT)
 include(GetMujoco)
 
+if(AIMRT_MUJOCO_SIM_BUILD_TESTS)
+  include(GetGTest)
+  enable_testing()
+endif()
+
 # Add subdirectory
 add_subdirectory(src)
 

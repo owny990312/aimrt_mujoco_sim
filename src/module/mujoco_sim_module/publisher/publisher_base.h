@@ -10,7 +10,7 @@
 
 #include "mujoco/mujoco.h"
 
-namespace aimrt_mujoco_sim::mujoco_sim_module {
+namespace aimrt_mujoco_sim::mujoco_sim_module::publisher {
 
 class PublisherBase {
  public:
@@ -34,4 +34,4 @@ class PublisherBase {
   virtual void PublishSensorData() = 0;
 };
 
-}  // namespace aimrt_mujoco_sim::mujoco_sim_module
+}  // namespace aimrt_mujoco_sim::mujoco_sim_module::publisher

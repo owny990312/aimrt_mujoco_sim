@@ -7,8 +7,8 @@
 
 namespace YAML {
 template <>
-struct convert<aimrt_mujoco_sim::mujoco_sim_module::JointActuatorSubscriber::Options> {
-  using Options = aimrt_mujoco_sim::mujoco_sim_module::JointActuatorSubscriber::Options;
+struct convert<aimrt_mujoco_sim::mujoco_sim_module::subscriber::JointActuatorSubscriber::Options> {
+  using Options = aimrt_mujoco_sim::mujoco_sim_module::subscriber::JointActuatorSubscriber::Options;
 
   static Node encode(const Options& rhs) {
     Node node;
@@ -48,7 +48,7 @@ struct convert<aimrt_mujoco_sim::mujoco_sim_module::JointActuatorSubscriber::Opt
 };
 }  // namespace YAML
 
-namespace aimrt_mujoco_sim::mujoco_sim_module {
+namespace aimrt_mujoco_sim::mujoco_sim_module::subscriber {
 
 void JointActuatorSubscriber::Initialize(YAML::Node options_node) {
   if (options_node && !options_node.IsNull())
@@ -121,4 +121,4 @@ void JointActuatorSubscriber::RegisterActuatorAddr() {
   joint_num_ = actuator_addr_vec_.size();
 }
 
-}  // namespace aimrt_mujoco_sim::mujoco_sim_module
+}  // namespace aimrt_mujoco_sim::mujoco_sim_module::subscriber
