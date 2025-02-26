@@ -5,3 +5,4 @@ set_namespace()
 
 add_subdirectory(inverted_pendulum)
 add_subdirectory(hardware)
+add_subdirectory(a2)

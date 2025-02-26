@@ -1,0 +1,349 @@
+# Copyright (c) 2023, AgiBot Inc.
+# All rights reserved.
+
+aimrt:
+  plugin:
+    plugins:
+      - name: sm_plugin
+        path: ./libaimrt_sm_plugin.so
+  log:
+    core_lvl: INFO # Trace/Debug/Info/Warn/Error/Fatal/Off
+    backends:
+      - type: console
+      - type: rotate_file # 文件日志
+        options:
+          path: ./log # 日志文件路径
+          filename: motion_control.log # 日志文件名称
+          max_file_size_m: 4 # 日志文件最大尺寸，单位m
+          max_file_num: 50 # 最大日志文件数量，0代表无限
+  executor:
+    executors:
+      - name: sm_default_thread 
+        type: asio_thread 
+      - name: gui_thread
+        type: simple_thread
+      - name: work_thread_pool
+        type: asio_thread
+        options:
+          thread_num: 4
+      - name: arm_joint_state_publisher_thread
+        type: asio_thread # 类型为线程型
+      - name: leg_joint_state_publisher_thread
+        type: asio_thread # 类型为线程型
+      - name: data_state_publisher_thread
+        type: asio_thread # 类型为线程型
+  channel:
+    backends:
+      - type: sm
+        options:
+          sub_default_executor: sm_default_thread 
+          sub_topic_options:
+            - topic_name: /body_drive/arm_joint_command
+            - topic_name: /body_drive/leg_joint_command
+    pub_topics_options:
+      - topic_name: /body_drive/imu/data
+        enable_backends: [sm]
+      - topic_name: /body_drive/arm_joint_state
+        enable_backends: [sm]
+      - topic_name: /body_drive/leg_joint_state
+        enable_backends: [sm]
+      - topic_name: /body_drive/foot_sensor_state
+        enable_backends: [sm]
+
+    sub_topics_options:
+      - topic_name: "/body_drive/arm_joint_command"
+        enable_backends: [sm]
+      - topic_name: "/body_drive/leg_joint_command"
+        enable_backends: [sm]
+  module:
+    pkgs:
+      - path: ./libmujoco_sim_pkg.so
+        enable_modules: [MujocoSimModule]
+    modules:
+      - name: MujocoSimModule
+        log_lvl: INFO
+
+# Module custom configuration
+MujocoSimModule:
+  simulation_model_path: ./install/resource/model/raise_a2_t2d0_flagship_flat.xml
+  sim_executor: work_thread_pool
+  gui_executor: gui_thread
+  subscriber_options:
+    - topic: /body_drive/leg_joint_command
+      type: joint_actuator_ros2
+      options:
+        joints:
+          # left leg
+          - name: idx01_left_hip_roll
+            bind_joint: idx01_left_hip_roll
+            bind_actuator_type: motor  
+            bind_actuator_name: motor_idx01_left_hip_roll
+          - name: idx02_left_hip_yaw
+            bind_joint: idx02_left_hip_yaw
+            bind_actuator_type: motor
+            bind_actuator_name: motor_idx02_left_hip_yaw
+          - name: idx03_left_hip_pitch
+            bind_joint: idx03_left_hip_pitch
+            bind_actuator_type: motor
+            bind_actuator_name: motor_idx03_left_hip_pitch
+          - name: idx04_left_tarsus
+            bind_joint: idx04_left_tarsus
+            bind_actuator_type: motor
+            bind_actuator_name: motor_idx04_left_tarsus
+          - name: idx05_01_left_toe_motorA
+            bind_joint: idx05_01_left_toe_motorA
+            bind_actuator_type: motor
+            bind_actuator_name: motor_idx05_01_left_toe_motorA
+          - name: idx06_01_left_toe_motorB
+            bind_joint: idx06_01_left_toe_motorB
+            bind_actuator_type: motor
+            bind_actuator_name: motor_idx06_01_left_toe_motorB
+          # right leg
+          - name: idx07_right_hip_roll
+            bind_joint: idx07_right_hip_roll
+            bind_actuator_type: motor
+            bind_actuator_name: motor_idx07_right_hip_roll
+          - name: idx08_right_hip_yaw
+            bind_joint: idx08_right_hip_yaw
+            bind_actuator_type: motor
+            bind_actuator_name: motor_idx08_right_hip_yaw
+          - name: idx09_right_hip_pitch
+            bind_joint: idx09_right_hip_pitch
+            bind_actuator_type: motor
+            bind_actuator_name: motor_idx09_right_hip_pitch
+          - name: idx10_right_tarsus
+            bind_joint: idx10_right_tarsus
+            bind_actuator_type: motor
+            bind_actuator_name: motor_idx10_right_tarsus
+          - name: idx11_01_right_toe_motorA
+            bind_joint: idx11_01_right_toe_motorA
+            bind_actuator_type: motor
+            bind_actuator_name: motor_idx11_01_right_toe_motorA
+          - name: idx12_01_right_toe_motorB
+            bind_joint: idx12_01_right_toe_motorB
+            bind_actuator_type: motor
+            bind_actuator_name: motor_idx12_01_right_toe_motorB
+    - topic: /body_drive/arm_joint_command
+      type: joint_actuator_ros2
+      options:
+        joints:
+          - name: idx13_left_arm_joint1
+            bind_joint: idx13_left_arm_joint1
+            bind_actuator_type: position
+            bind_actuator_name: motor_idx13_left_arm_joint1
+          - name: idx14_left_arm_joint2
+            bind_joint: idx14_left_arm_joint2
+            bind_actuator_type: position
+            bind_actuator_name: motor_idx14_left_arm_joint2
+          - name: idx15_left_arm_joint3
+            bind_joint: idx15_left_arm_joint3
+            bind_actuator_type: position
+            bind_actuator_name: motor_idx15_left_arm_joint3
+          - name: idx16_left_arm_joint4
+            bind_joint: idx16_left_arm_joint4
+            bind_actuator_type: position
+            bind_actuator_name: motor_idx16_left_arm_joint4
+          - name: idx17_left_arm_joint5
+            bind_joint: idx17_left_arm_joint5
+            bind_actuator_type: position
+            bind_actuator_name: motor_idx17_left_arm_joint5
+          - name: idx18_01_left_wrist_rod_A_joint
+            bind_joint: idx18_01_left_wrist_rod_A_joint
+            bind_actuator_type: position
+            bind_actuator_name: motor_idx18_01_left_wrist_rod_A_joint
+          - name: idx19_01_left_wrist_rod_B_joint
+            bind_joint: idx19_01_left_wrist_rod_B_joint
+            bind_actuator_type: position
+            bind_actuator_name: motor_idx19_01_left_wrist_rod_B_joint
+          - name: idx20_right_arm_joint1
+            bind_joint: idx20_right_arm_joint1
+            bind_actuator_type: position
+            bind_actuator_name: motor_idx20_right_arm_joint1
+          - name: idx21_right_arm_joint2
+            bind_joint: idx21_right_arm_joint2
+            bind_actuator_type: position
+            bind_actuator_name: motor_idx21_right_arm_joint2
+          - name: idx22_right_arm_joint3
+            bind_joint: idx22_right_arm_joint3
+            bind_actuator_type: position
+            bind_actuator_name: motor_idx22_right_arm_joint3
+          - name: idx23_right_arm_joint4
+            bind_joint: idx23_right_arm_joint4
+            bind_actuator_type: position
+            bind_actuator_name: motor_idx23_right_arm_joint4
+          - name: idx24_right_arm_joint5
+            bind_joint: idx24_right_arm_joint5
+            bind_actuator_type: position
+            bind_actuator_name: motor_idx24_right_arm_joint5
+          - name: idx25_01_right_wrist_rod_A_joint
+            bind_joint: idx25_01_right_wrist_rod_A_joint
+            bind_actuator_type: position
+            bind_actuator_name: motor_idx25_01_right_wrist_rod_A_joint
+          - name: idx26_01_right_wrist_rod_B_joint
+            bind_joint: idx26_01_right_wrist_rod_B_joint
+            bind_actuator_type: position
+            bind_actuator_name: motor_idx26_01_right_wrist_rod_B_joint
+  publisher_options:
+    - topic: /body_drive/imu/data
+      frequency: 500
+      executor: data_state_publisher_thread
+      type: imu_sensor_ros2
+      options:
+        bind_site: imu
+        bind_framequat: body-orientation
+        bind_gyro: body-angular-velocity
+        bind_accelerometer: body-linear-acceleration
+    - topic: /body_drive/foot_sensor_state
+      frequency: 500
+      executor: data_state_publisher_thread
+      type: touch_sensor_ros2
+      options:
+        names: 
+          - left_foot_sensor
+          - right_foot_sensor
+        states:
+          - - bind_site: left-foot-hl-site
+              bind_touch_sensor: foot_left_contact_toe_l
+            - bind_site: left-foot-hr-site
+              bind_touch_sensor: foot_left_contact_toe_r
+            - bind_site: left-foot-rl-site
+              bind_touch_sensor: foot_left_contact_heel_l
+            - bind_site: left-foot-rr-site
+              bind_touch_sensor: foot_left_contact_heel_r
+          - - bind_site: right-foot-hl-site
+              bind_touch_sensor: foot_right_contact_toe_l
+            - bind_site: right-foot-hr-site
+              bind_touch_sensor: foot_right_contact_toe_r
+            - bind_site: right-foot-rl-site
+              bind_touch_sensor: foot_right_contact_heel_l
+            - bind_site: right-foot-rr-site
+              bind_touch_sensor: foot_right_contact_heel_r
+    - topic: /body_drive/arm_joint_state 
+      frequency: 1000
+      executor: arm_joint_state_publisher_thread
+      type: joint_sensor_ros2
+      options:
+        joints:
+          # left arm
+          - name: idx13_left_arm_joint1
+            bind_joint: idx13_left_arm_joint1
+            bind_jointpos_sensor: jointpos_idx13_left_arm_joint1
+            bind_jointvel_sensor: jointvel_idx13_left_arm_joint1
+          - name: idx14_left_arm_joint2
+            bind_joint: idx14_left_arm_joint2
+            bind_jointpos_sensor: jointpos_idx14_left_arm_joint2
+            bind_jointvel_sensor: jointvel_idx14_left_arm_joint2
+          - name: idx15_left_arm_joint3
+            bind_joint: idx15_left_arm_joint3
+            bind_jointpos_sensor: jointpos_idx15_left_arm_joint3
+            bind_jointvel_sensor: jointvel_idx15_left_arm_joint3
+          - name: idx16_left_arm_joint4
+            bind_joint: idx16_left_arm_joint4
+            bind_jointpos_sensor: jointpos_idx16_left_arm_joint4
+            bind_jointvel_sensor: jointvel_idx16_left_arm_joint4
+          - name: idx17_left_arm_joint5
+            bind_joint: idx17_left_arm_joint5
+            bind_jointpos_sensor: jointpos_idx17_left_arm_joint5
+            bind_jointvel_sensor: jointvel_idx17_left_arm_joint5
+          - name: idx18_01_left_wrist_rod_A_joint
+            bind_joint: idx18_01_left_wrist_rod_A_joint
+            bind_jointpos_sensor: jointpos_idx18_01_left_wrist_rod_A_joint
+            bind_jointvel_sensor: jointvel_idx18_01_left_wrist_rod_A_joint
+          - name: idx19_01_left_wrist_rod_B_joint
+            bind_joint: idx19_01_left_wrist_rod_B_joint
+            bind_jointpos_sensor: jointpos_idx19_01_left_wrist_rod_B_joint
+            bind_jointvel_sensor: jointvel_idx19_01_left_wrist_rod_B_joint
+          # right arm
+          - name: idx20_right_arm_joint1
+            bind_joint: idx20_right_arm_joint1
+            bind_jointpos_sensor: jointpos_idx20_right_arm_joint1
+            bind_jointvel_sensor: jointvel_idx20_right_arm_joint1
+          - name: idx21_right_arm_joint2
+            bind_joint: idx21_right_arm_joint2
+            bind_jointpos_sensor: jointpos_idx21_right_arm_joint2
+            bind_jointvel_sensor: jointvel_idx21_right_arm_joint2
+          - name: idx22_right_arm_joint3
+            bind_joint: idx22_right_arm_joint3
+            bind_jointpos_sensor: jointpos_idx22_right_arm_joint3
+            bind_jointvel_sensor: jointvel_idx22_right_arm_joint3
+          - name: idx23_right_arm_joint4
+            bind_joint: idx23_right_arm_joint4
+            bind_jointpos_sensor: jointpos_idx23_right_arm_joint4
+            bind_jointvel_sensor: jointvel_idx23_right_arm_joint4
+          - name: idx24_right_arm_joint5
+            bind_joint: idx24_right_arm_joint5
+            bind_jointpos_sensor: jointpos_idx24_right_arm_joint5
+            bind_jointvel_sensor: jointvel_idx24_right_arm_joint5
+          - name: idx25_01_right_wrist_rod_A_joint
+            bind_joint: idx25_01_right_wrist_rod_A_joint
+            bind_jointpos_sensor: jointpos_idx25_01_right_wrist_rod_A_joint
+            bind_jointvel_sensor: jointvel_idx25_01_right_wrist_rod_A_joint
+          - name: idx26_01_right_wrist_rod_B_joint
+            bind_joint: idx26_01_right_wrist_rod_B_joint
+            bind_jointpos_sensor: jointpos_idx26_01_right_wrist_rod_B_joint
+            bind_jointvel_sensor: jointvel_idx26_01_right_wrist_rod_B_joint
+    - topic: /body_drive/leg_joint_state
+      frequency: 1000
+      executor: leg_joint_state_publisher_thread
+      type: joint_sensor_ros2
+      options:
+        joints:
+          # left leg
+          - name: idx01_left_hip_roll
+            bind_joint: idx01_left_hip_roll
+            bind_jointpos_sensor: jointpos_idx01_left_hip_roll
+            bind_jointvel_sensor: jointvel_idx01_left_hip_roll
+          - name: idx02_left_hip_yaw
+            bind_joint: idx02_left_hip_yaw
+            bind_jointpos_sensor: jointpos_idx02_left_hip_yaw
+            bind_jointvel_sensor: jointvel_idx02_left_hip_yaw
+          - name: idx03_left_hip_pitch
+            bind_joint: idx03_left_hip_pitch
+            bind_jointpos_sensor: jointpos_idx03_left_hip_pitch
+            bind_jointvel_sensor: jointvel_idx03_left_hip_pitch
+          - name: idx04_left_tarsus
+            bind_joint: idx04_left_tarsus
+            bind_jointpos_sensor: jointpos_idx04_left_tarsus
+            bind_jointvel_sensor: jointvel_idx04_left_tarsus
+          - name: idx05_01_left_toe_motorA
+            bind_joint: idx05_01_left_toe_motorA
+            bind_jointpos_sensor: jointpos_idx05_01_left_toe_motorA
+            bind_jointvel_sensor: jointvel_idx05_01_left_toe_motorA
+          - name: idx06_01_left_toe_motorB
+            bind_joint: idx06_01_left_toe_motorB
+            bind_jointpos_sensor: jointpos_idx06_01_left_toe_motorB
+            bind_jointvel_sensor: jointvel_idx06_01_left_toe_motorB
+          # right leg
+          - name: idx07_right_hip_roll
+            bind_joint: idx07_right_hip_roll
+            bind_jointpos_sensor: jointpos_idx07_right_hip_roll
+            bind_jointvel_sensor: jointvel_idx07_right_hip_roll
+          - name: idx08_right_hip_yaw
+            bind_joint: idx08_right_hip_yaw
+            bind_jointpos_sensor: jointpos_idx08_right_hip_yaw
+            bind_jointvel_sensor: jointvel_idx08_right_hip_yaw
+          - name: idx09_right_hip_pitch
+            bind_joint: idx09_right_hip_pitch
+            bind_jointpos_sensor: jointpos_idx09_right_hip_pitch
+            bind_jointvel_sensor: jointvel_idx09_right_hip_pitch
+          - name: idx10_right_tarsus
+            bind_joint: idx10_right_tarsus
+            bind_jointpos_sensor: jointpos_idx10_right_tarsus
+            bind_jointvel_sensor: jointvel_idx10_right_tarsus
+          - name: idx11_01_right_toe_motorA
+            bind_joint: idx11_01_right_toe_motorA
+            bind_jointpos_sensor: jointpos_idx11_01_right_toe_motorA
+            bind_jointvel_sensor: jointvel_idx11_01_right_toe_motorA
+          - name: idx12_01_right_toe_motorB
+            bind_joint: idx12_01_right_toe_motorB
+            bind_jointpos_sensor: jointpos_idx12_01_right_toe_motorB
+            bind_jointvel_sensor: jointvel_idx12_01_right_toe_motorB
+
+
+
+          
+          
+
+
+
+

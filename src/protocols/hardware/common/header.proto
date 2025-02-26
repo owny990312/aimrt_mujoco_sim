@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+import "timestamp.proto";
+
+package aimrt.protocols.common;
+
+/**
+ * @brief normal message header
+ */
+message Header {
+  // sequence ID: consecutively increasing ID
+  uint32 seq = 1;
+
+  // timestamp
+  Timestamp timestamp = 2;
+
+  // frame this data is associated with
+  string frame_id = 3;
+
+  // // control source (normally algorithm module keeps default, no need to set)
+  // ControlSource control_source = 4;
+}
