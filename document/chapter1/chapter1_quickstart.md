@@ -8,7 +8,7 @@ Aimrt_Mujoco_Sim 旨在为机器人开发者提供一个快速上手的仿真平
 ## 1.2 安装说明
 
 ### 1.2.1 环境与依赖 (dependencies)
-- 环境（参考 [AimRT 安装与引用](https://docs.aimrt.org/tutorials/quick_start/installation_cpp.html)， 以选择合适的开发环境）
+- 环境（参考 [AimRT 安装与引用](https://docs.aimrt.org/v0.10.0-rc1/tutorials/quick_start/installation_cpp.html)， 以选择合适的开发环境）
 
     - cmake 3.24+
     - gcc 11.4+
@@ -17,10 +17,10 @@ Aimrt_Mujoco_Sim 旨在为机器人开发者提供一个快速上手的仿真平
 
 - 依赖 （在构建过程均通过 cmake 自动下载）
 
-    | 依赖名称 | 版本    | 说明     | git地址                                |
-    | -------- | ------- | -------- | -------------------------------------- |
-    | AimRT    | 0.10.0+ | 通信框架 | https://github.com/AimRT/AimRT.git     |
-    | mujoco   | 3.1.6   | 物理引擎 | https://github.com/deepmind/mujoco.git |
+    | 依赖名称 | 版本        | 说明     | git地址                                |
+    | -------- | ----------- | -------- | -------------------------------------- |
+    | AimRT    | 0.10.0-rc1+ | 通信框架 | https://github.com/AimRT/AimRT.git     |
+    | mujoco   | 3.1.6       | 物理引擎 | https://github.com/deepmind/mujoco.git |
 
 
 ### 1.2.2 构建并安装 (build and install)
@@ -42,6 +42,7 @@ Aimrt_Mujoco_Sim 旨在为机器人开发者提供一个快速上手的仿真平
 ```shell
 ./start_examples_inverted_pendulum_with_pid_control.sh
 ```
+当弹出 mujoco 可视化界面并看到倒立摆模型运动时，说明运行成功。
 
 ## 1.3 项目结构
 ``` shell
