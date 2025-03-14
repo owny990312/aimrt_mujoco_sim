@@ -62,14 +62,5 @@ AIMRT_MUJOCO_SIM/
 └── CMakeLists.txt           # 项目根目录的 CMake 配置
 ```
 
-<a href="/path/to/home" style="
-    display: inline-block;
-    padding: 8px 16px;
-    background: linear-gradient(135deg, #6B48FF, #00A3FF);
-    color: white !important;
-    border-radius: 25px;
-    text-decoration: none;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-">🚀 返回主目录</a>
+[返回目录](../index.md)
 
