@@ -3,8 +3,6 @@
 
 #pragma once
 
-#include <vector>
-
 #include "mujoco_sim_module/global.h"
 #include "mujoco_sim_module/subscriber/subscriber_base.h"
 

@@ -2,13 +2,13 @@
 // All rights reserved.
 
 #pragma once
+#include "mujoco_sim_module/global.h"
+#include "mujoco_sim_module/publisher/publisher_base.h"
+#include "mujoco_sim_module/publisher/utils.h"
 
 #include "aimrt_module_protobuf_interface/channel/protobuf_channel.h"
 #include "aimrt_module_protobuf_interface/util/protobuf_tools.h"
 #include "imu.pb.h"
-#include "mujoco_sim_module/global.h"
-#include "mujoco_sim_module/publisher/publisher_base.h"
-#include "mujoco_sim_module/publisher/utils.h"
 
 #ifdef AIMRT_MUJOCO_SIM_BUILD_WITH_ROS2
   #include <sensor_msgs/msg/imu.hpp>
@@ -38,11 +38,8 @@ class ImuSensorPublisherBase : public PublisherBase {
   void Shutdown() override {}
 
   void SetPublisherHandle(aimrt::channel::PublisherRef publisher_handle) override { publisher_ = publisher_handle; }
-
   void SetExecutor(aimrt::executor::ExecutorRef executor) override { executor_ = executor; };
-
   void SetFreq(uint32_t freq) override { channel_frq_ = freq; };
-
   void SetMj(mjModel* m, mjData* d) override;
 
  protected:
@@ -95,6 +92,7 @@ class ImuSensorPublisher : public ImuSensorPublisherBase {
   std::string_view Type() const noexcept override { return "imu_sensor"; }
   void PublishSensorData() override;
 };
+
 #ifdef AIMRT_MUJOCO_SIM_BUILD_WITH_ROS2
 class ImuSensorRos2Publisher : public ImuSensorPublisherBase {
  public:

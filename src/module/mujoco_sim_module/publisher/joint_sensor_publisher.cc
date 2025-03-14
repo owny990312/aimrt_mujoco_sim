@@ -179,5 +179,4 @@ void JointSensorRos2Publisher::PublishSensorData() {
   }
 }
 #endif
-
 }  // namespace aimrt_mujoco_sim::mujoco_sim_module::publisher

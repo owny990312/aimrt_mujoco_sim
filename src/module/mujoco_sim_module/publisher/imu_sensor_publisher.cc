@@ -7,7 +7,6 @@ namespace YAML {
 template <>
 struct convert<aimrt_mujoco_sim::mujoco_sim_module::publisher::ImuSensorPublisherBase::Options> {
   using Options = aimrt_mujoco_sim::mujoco_sim_module::publisher::ImuSensorPublisherBase::Options;
-
   static Node encode(const Options& rhs) {
     Node node;
 
@@ -67,7 +66,8 @@ void ImuSensorPublisherBase::InitializeBase(YAML::Node options_node) {
 
 void ImuSensorPublisher::Initialize(YAML::Node options_node) {
   InitializeBase(options_node);
-  AIMRT_CHECK_ERROR_THROW(aimrt::channel::RegisterPublishType<aimrt::protocols::sensor::ImuState>(publisher_), "Register publish type failed.");
+  AIMRT_CHECK_ERROR_THROW(aimrt::channel::RegisterPublishType<aimrt::protocols::sensor::ImuState>(publisher_),
+                          "Register publish type failed.");
 }
 
 void ImuSensorPublisher::PublishSensorData() {
@@ -123,7 +123,8 @@ void ImuSensorPublisher::PublishSensorData() {
 #ifdef AIMRT_MUJOCO_SIM_BUILD_WITH_ROS2
 void ImuSensorRos2Publisher::Initialize(YAML::Node options_node) {
   InitializeBase(options_node);
-  AIMRT_CHECK_ERROR_THROW(aimrt::channel::RegisterPublishType<sensor_msgs::msg::Imu>(publisher_), "Register publish type failed.");
+  AIMRT_CHECK_ERROR_THROW(aimrt::channel::RegisterPublishType<sensor_msgs::msg::Imu>(publisher_),
+                          "Register publish type failed.");
 }
 
 void ImuSensorRos2Publisher::PublishSensorData() {

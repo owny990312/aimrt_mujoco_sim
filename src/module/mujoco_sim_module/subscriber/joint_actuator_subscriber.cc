@@ -140,7 +140,6 @@ void JointActuatorSubscriber::EventHandle(const std::shared_ptr<const aimrt::pro
 }
 
 #ifdef AIMRT_MUJOCO_SIM_BUILD_WITH_ROS2
-
 void JointActuatorRos2Subscriber::Initialize(YAML::Node options_node) {
   InitializeBase(options_node);
 

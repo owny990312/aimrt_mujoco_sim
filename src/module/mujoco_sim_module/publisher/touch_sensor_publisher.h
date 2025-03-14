@@ -2,12 +2,13 @@
 // All rights reserved.
 
 #pragma once
-#include "aimrt_module_protobuf_interface/channel/protobuf_channel.h"
-#include "aimrt_module_protobuf_interface/util/protobuf_tools.h"
-#include "mujoco_sim_module/global.h"
 #include "mujoco_sim_module/publisher/publisher_base.h"
 #include "mujoco_sim_module/publisher/utils.h"
 #include "touch_sensor_state.pb.h"
+
+#include "aimrt_module_protobuf_interface/channel/protobuf_channel.h"
+#include "aimrt_module_protobuf_interface/util/protobuf_tools.h"
+#include "mujoco_sim_module/global.h"
 
 #ifdef AIMRT_MUJOCO_SIM_BUILD_WITH_ROS2
   #include "aimrt_module_ros2_interface/channel/ros2_channel.h"
